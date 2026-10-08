@@ -58,7 +58,7 @@ The damping coefficient μ is hidden and recovered as a trainable variable, join
 | 20 | ~0.52 |
 | 40 | ~0.51 |
 
-![Parameter recovery](figures/parameter_recovery.png)
+![Parameter recovery](figs/parameter_recovery.png)
 
 ### Module 3 — Spectral bias *(in progress)*
 A high-frequency version of the problem (ω = 10) is used to expose spectral bias, then fixed with a Fourier-feature input embedding.
