@@ -42,7 +42,7 @@ A PINN solves the oscillator from physics and initial conditions alone (no solut
 - Relative L² error: **~1×10⁻²** (Adam, 20k steps)
 - Optional Adam → L-BFGS polishing tightens this further.
 
-![Forward solution](figures/forward_solution.png)
+![Forward solution](figs/forward_solution.png)
 
 ### Module 2 — Inverse problem
 The damping coefficient μ is hidden and recovered as a trainable variable, jointly with the solution field, from ~20 sparse noisy measurements.
