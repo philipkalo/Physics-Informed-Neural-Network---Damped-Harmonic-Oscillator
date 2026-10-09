@@ -53,18 +53,30 @@ A PINN solves the oscillator from physics and initial conditions alone (no solut
 ![Forward solution](figs/forward_solution.png)
 
 ### Module 2 — Inverse problem
-The damping coefficient μ is hidden and recovered as a trainable variable, jointly with the solution field, from ~20 sparse noisy measurements.
+The damping coefficient μ is hidden and recovered as a trainable variable, jointly with the solution field, from ~20 sparse noisy measurements. An Adam → L-BFGS two-stage optimisation is used for the headline run.
 
-- Recovered **μ = 0.51** (true value 0.5) from 20 points at 3% noise.
-- **Noise robustness:** error degrades smoothly and roughly proportionally with noise level.
-- **Data-count identifiability threshold:** recovery is accurate at 20–40 points but fails catastrophically below ~10 — a non-identifiability result, not an optimiser failure.
+- Recovered **μ = 0.513** (true value 0.5) from 20 points at 3% noise — a 2.6% error.
+- **Basin of attraction:** starting the estimate at μ₀ = 0, 1, and 5 all converge to ≈0.51, so recovery is robust to initialisation across the tested range.
+- **Noise robustness:** error degrades smoothly and roughly proportionally with the noise level — no cliff.
+- **Data-count identifiability threshold:** recovery is accurate at 20–40 points but fails *catastrophically* below ~10, where the problem becomes non-identifiable — a property of the inverse problem itself, not an optimiser failure.
 
-| Data points | Recovered μ (noise 0.05) |
+**Noise sweep (20 points):**
+
+| Noise σ | Recovered μ | Error |
+|---|---|---|
+| 0.00 | 0.501 | 0.2% |
+| 0.03 | 0.513 | 2.6% |
+| 0.10 | 0.546 | 9.2% |
+| 0.20 | 0.612 | 22% |
+
+**Data-count sweep (noise 0.05):**
+
+| Data points | Recovered μ |
 |---|---|
-| 5  | ~8.9 (fails) |
-| 10 | ~5.9 (fails) |
-| 20 | ~0.52 |
-| 40 | ~0.51 |
+| 5  | 8.95 (fails) |
+| 10 | 5.89 (fails) |
+| 20 | 0.522 |
+| 40 | 0.507 |
 
 ![Parameter recovery](figs/parameter_recovery.png)
 
