@@ -60,15 +60,22 @@ The damping coefficient μ is hidden and recovered as a trainable variable, join
 
 ![Parameter recovery](figs/parameter_recovery.png)
 
-### Module 3 — Spectral bias *(in progress)*
-A high-frequency version of the problem (ω = 10) is used to expose spectral bias, then fixed with a Fourier-feature input embedding.
+### Module 3 — Spectral bias
+A high-frequency version of the problem (ω = 10, ~16 cycles over the domain) is used to expose spectral bias, then fixed with a Fourier-feature input embedding. The *only* architectural change between the two runs below is a single non-trainable sin/cos embedding layer inserted after input rescaling.
 
-- Plain MLP at ω = 10: relative L² ≈ **0.89** (fails).
-- With Fourier features (σ = 5): relative L² ≈ **0.0095** — a ~90× improvement.
-- The fix introduces a sensitive hyperparameter σ, producing a U-shaped error curve (too small → underfits; too large → destroys trainability).
-- Benchmarked against a classical solver (`scipy.integrate.solve_ivp`), which wins decisively on this 1-D forward problem — included to frame honestly *where* PINNs are and are not the right tool.
+- Plain MLP at ω = 10: relative L² = **0.88** — the network cannot represent the fast oscillation and collapses toward a near-flat curve.
+- With Fourier features (σ = 5): relative L² = **6.9×10⁻³**, a **127× improvement** from that one layer.
 
-> Numbers above are from reference runs; replace with your own once Module 3 is finalised.
+| | plain MLP | + Fourier (σ = 5) |
+|---|---|---|
+| rel. L² at ω = 10 | 0.88 (fails) | 0.0069 (works) |
+
+<p align="center">
+  <img src="figs/spectral_failure.png" width="48%" alt="Plain MLP fails at high frequency"/>
+  <img src="figs/spectral_fixed.png" width="48%" alt="Fourier features recover the solution"/>
+</p>
+
+*Left: a plain PINN exhibits spectral bias — it fits the low-frequency envelope but not the oscillation. Right: an identical network with a Fourier-feature embedding tracks the solution.*
 
 ---
 
