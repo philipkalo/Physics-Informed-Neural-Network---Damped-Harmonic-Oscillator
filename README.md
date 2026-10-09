@@ -37,10 +37,18 @@ which has a closed-form underdamped solution used for validation and for generat
 ## Results
 
 ### Module 1 — Forward problem
-A PINN solves the oscillator from physics and initial conditions alone (no solution data), validated against the analytical solution.
+A PINN solves the oscillator from physics and initial conditions alone (no solution data), validated against the analytical solution. Autodiff derivatives were cross-checked against finite differences before training, to confirm the residual is built on correct gradients.
 
-- Relative L² error: **~1×10⁻²** (Adam, 20k steps)
-- Optional Adam → L-BFGS polishing tightens this further.
+- Relative L² error: **2.7×10⁻³** (0.27%) after 20k Adam steps — the PINN reconstructs a solution it never saw.
+- **Width/depth ablation:** error does *not* decrease monotonically with capacity — the smallest network did best here, and the largest beat the mid-size one, i.e. extra parameters bring diminishing (and noisy) returns on this simple problem.
+
+| Width × depth | Params | Relative L² |
+|---|---|---|
+| 16 × 2 | 321 | 3.5×10⁻³ |
+| 32 × 3 | 2,209 | 1.5×10⁻² |
+| 64 × 4 | 12,673 | 5.2×10⁻³ |
+
+*(Single seed per configuration — a rigorous version would average over several seeds, since initialisation noise is comparable to the differences above.)*
 
 ![Forward solution](figs/forward_solution.png)
 
